@@ -1,0 +1,2 @@
+uuusoftware.com
+*.uuusoftware.com

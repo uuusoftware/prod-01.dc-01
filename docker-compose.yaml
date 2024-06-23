@@ -1,0 +1,22 @@
+services:
+  nginx:
+    # image: nginx:1.27
+    # image: ./nginx/Dockerfile
+    build:
+      context: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      # - ./conf.d:/etc/nginx/conf.d:ro
+      - ./certificate/fullchain.pem:/etc/nginx/ssl/certificate/fullchain.pem:ro
+      - ./certificate/privkey.pem:/etc/nginx/ssl/certificate/privkey.pem:ro
+      # - ./htpasswd:/etc/nginx/.htpasswd:ro
+      - ./.data/nginx-cache:/var/cache/nginx
+      - ./nginx.conf:/etc/nginx/templates
+    restart: unless-stopped
+    environment:
+      NGINX_ENVSUBST_TEMPLATE_SUFFIX: .nginx
+      NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx/templates

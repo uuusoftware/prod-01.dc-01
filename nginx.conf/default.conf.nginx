@@ -1,0 +1,35 @@
+  ##
+  # Basic Settings
+  ##
+
+  # sendfile on;
+  # tcp_nopush on;
+  # tcp_nodelay on;
+  # types_hash_max_size 2048;
+  # default_type application/octet-stream;
+
+
+  server {
+    listen 80 default_server;
+    server_name _;
+    return 302 https://$host$request_uri;
+  }
+
+  ##
+  # SSL Settings
+  ##
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+  ssl_prefer_server_ciphers on;
+
+  ##
+  # Gzip Settings
+  ##
+
+  #gzip on;
+  #gzip_vary on;
+  #gzip_proxied any;
+  #gzip_comp_level 6;
+  #gzip_buffers 16 8k;
+  #gzip_http_version 1.1;
+  #gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
