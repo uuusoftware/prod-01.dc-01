@@ -7,10 +7,10 @@ map $sent_http_content_type $expires {
     # ~text/html                 30s;
     ~text/html                 10m;
     ~(image|font|audio|video)/ max;
-    # ~application/              7d;
-    ~application/              max;
-    # ~text/                     7d;
-    ~text/                     max;
+    ~application/              7d;
+    # ~application/              max;
+    ~text/                     7d;
+    # ~text/                     max;
 }
 
 map $http_cache_control $cache_bypass {
