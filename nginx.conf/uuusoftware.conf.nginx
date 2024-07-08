@@ -1,4 +1,4 @@
-resolver 8.8.8.8 valid=10s;
+resolver 8.8.8.8 8.8.4.4 ipv6=off;
 
 proxy_cache_path /cache/ keys_zone=cache:10m max_size=100m inactive=60m;
 
@@ -51,31 +51,50 @@ server {
 
   expires $expires;
 
+  add_header Pragma "public";
+  add_header Cache-Control "public";
+
   proxy_cache cache;
   proxy_cache_background_update on;
+  # https://stackoverflow.com/questions/40127837/stale-while-revalidate-cache-replacement-from-varnish/40134179#40134179
+  proxy_cache_use_stale updating error timeout http_500 http_502 http_503 http_504;
   proxy_cache_lock on;
-  proxy_cache_use_stale updating;
-  # proxy_cache_bypass $cache_bypass;
+  # proxy_cache_use_stale updating;
+  proxy_cache_bypass $cache_bypass;
 
 
   access_log off;
 
-  location / {
-    proxy_cache_valid 1m;
-    # proxy_pass http://127.0.0.1:8081;
-    proxy_cache_key $scheme$proxy_host$request_uri;
-    proxy_hide_header cache;
-    proxy_hide_header cache-control;
-    proxy_hide_header cache-status;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  proxy_set_header X-NginX-Proxy true;
+  real_ip_header X-Real-IP;
 
-    proxy_pass https://master--uuusoftware.netlify.app;
+  # When enabled, only one request at a time will be allowed to populate a new cache element identified
+  # proxy_cache_lock on;
+
+  location / {
+    # proxy_cache_valid 1m;
+    # proxy_cache_valid 30m;
+    proxy_cache_valid 200 301 302 404 10m;
+    proxy_cache_valid any      1m;
+
+    proxy_cache_valid 404 15s;
+    proxy_pass http://127.0.0.1:8081;
+    proxy_cache_key $scheme$proxy_host$request_uri;
+
+
+    # proxy_cache_background_update on;
   }
 
   location ~* \.(js|jpg|png|css|svg|json|woff|woff2)$ {
     proxy_cache_valid 7d;
-    # proxy_pass http://127.0.0.1:8081;
+    proxy_cache_valid 200 301 302 404 7d;
+    proxy_cache_valid any      1m;
+
+    proxy_pass http://127.0.0.1:8081;
     proxy_cache_key $scheme$proxy_host$request_uri;
-    proxy_pass https://master--uuusoftware.netlify.app;
   }
 
   #location / {
@@ -86,25 +105,37 @@ server {
   #  root /data/main/dist;
   #}
 
-  location @serve {
-    proxy_pass https://master--uuusoftware.netlify.app;
-    # proxy_set_header Host $http_host;
-    proxy_set_header Host master--uuusoftware.netlify.app;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header X-NginX-Proxy true;
-    real_ip_header X-Real-IP;
-    proxy_connect_timeout 300;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    chunked_transfer_encoding off;
-  }
-
   gzip on;
   gzip_types text/html text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
 
   brotli on;
   brotli_types text/html text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
+}
+
+server {
+  listen 8081;
+
+  access_log off;
+
+
+  location / {
+    proxy_pass https://master--uuusoftware.netlify.app;
+    # proxy_set_header Host $http_host;
+    proxy_set_header Host master--uuusoftware.netlify.app;
+    proxy_pass_request_headers on;
+    #proxy_set_header X-Real-IP $remote_addr;
+    #proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    #proxy_set_header X-Forwarded-Proto $scheme;
+    # proxy_set_header X-NginX-Proxy true;
+    #real_ip_header X-Real-IP;
+    proxy_connect_timeout 300;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    # chunked_transfer_encoding off;
+
+    proxy_hide_header cache;
+    proxy_hide_header cache-control;
+    proxy_hide_header cache-status;
+  }
 }
