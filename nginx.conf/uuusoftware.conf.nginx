@@ -3,13 +3,13 @@ resolver 8.8.8.8 8.8.4.4 ipv6=off;
 proxy_cache_path /cache/ keys_zone=cache:10m max_size=100m inactive=60m;
 
 map $sent_http_content_type $expires {
-    default                    off;
+    default                    max;
     # ~text/html                 30s;
-    ~text/html                 10m;
-    ~(image|font|audio|video)/ max;
-    ~application/              7d;
+    # ~text/html                 10m;
+    # ~(image|font|audio|video)/ max;
+    # ~application/              7d;
     # ~application/              max;
-    ~text/                     7d;
+    # ~text/                     7d;
     # ~text/                     max;
 }
 
