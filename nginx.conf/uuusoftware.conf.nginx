@@ -50,13 +50,14 @@ server {
 
   error_page 404 /404-inlined.html;
 
-  if ($subdomain = '') { set $subdomain 'master'; }
-  if ($subdomain = 'www') { set $subdomain 'master'; }
+  set $subdomainfolder $subdomain;
+  if ($subdomain = '') { set $subdomainfolder 'master'; }
+  if ($subdomain = 'www') { set $subdomainfolder 'master'; }
 
   add_header X-Robots-Tag $headernoindexvalue always;
 
   location / {
-    root /www/uuusoftware.com/$subdomain;
+    root /www/uuusoftware.com/$subdomainfolder;
     try_files $uri $uri/index.html $uri.html =404;
   }
 
