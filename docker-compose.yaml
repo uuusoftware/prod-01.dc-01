@@ -16,6 +16,7 @@ services:
       # - ./htpasswd:/etc/nginx/.htpasswd:ro
       - ./.data/nginx-cache:/var/cache/nginx
       - ./nginx.conf:/etc/nginx/templates
+      - ./www:/www
     restart: unless-stopped
     environment:
       NGINX_ENVSUBST_TEMPLATE_SUFFIX: .nginx

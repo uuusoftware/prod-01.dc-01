@@ -1,0 +1,73 @@
+resolver 8.8.8.8 8.8.4.4 ipv6=off;
+
+map $sent_http_content_type $expires {
+  default                    max;
+  # ~text/html                 30s;
+  # ~text/html                 10m;
+  # ~(image|font|audio|video)/ max;
+  # ~application/              7d;
+  # ~application/              max;
+  # ~text/                     7d;
+  # ~text/                     max;
+}
+
+map $http_cache_control $cache_bypass {
+  no-cache   1;
+}
+
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  ""      close;
+}
+
+map $subdomain  $headernoindexvalue {
+  default  'noindex';
+  master   '';
+  www     '';
+  ""    '';
+}
+
+charset utf-8;
+source_charset utf-8;
+
+absolute_redirect off;
+
+chunked_transfer_encoding off;
+
+server {
+  listen 443 ssl;
+  server_name  ~^(?<subdomain>[^\.]+)\.uuusoftware\.com$;
+
+  ssl_certificate /etc/nginx/ssl/certificate/fullchain.pem;
+  ssl_certificate_key /etc/nginx/ssl/certificate/privkey.pem;
+
+  expires $expires;
+
+  add_header Pragma "public";
+  add_header Cache-Control "public";
+
+  access_log off;
+
+  error_page 404 /404-inlined.html;
+
+  if ($subdomain = '') { set $subdomain 'master'; }
+  if ($subdomain = 'www') { set $subdomain 'master'; }
+
+  add_header X-Robots-Tag $headernoindexvalue always;
+
+  location / {
+    root /www/uuusoftware.com/$subdomain;
+    try_files $uri $uri/index.html $uri.html =404;
+  }
+
+  location = /404-inlined.html {
+    root /www/uuusoftware.com/master;
+    internal;
+  }
+
+  gzip on;
+  gzip_types text/html text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
+
+  brotli on;
+  brotli_types text/html text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
+}
