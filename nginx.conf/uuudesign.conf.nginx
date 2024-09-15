@@ -1,0 +1,22 @@
+server {
+  listen 443 ssl;
+  server_name  ~^(?<subdomain>[^\.]+)\.uuudesign\.com$;
+
+  ssl_certificate /etc/nginx/ssl/certificate/fullchain.pem;
+  ssl_certificate_key /etc/nginx/ssl/certificate/privkey.pem;
+
+  add_header Pragma "public";
+  add_header Cache-Control "public";
+
+  access_log off;
+
+  rewrite ^/(.*)$ https://uuusoftware.com/$1 permanent;
+
+  gzip on;
+  # gzip_types text/html already included by default
+  gzip_types text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
+
+  brotli on;
+  # brotli_types text/html already included by default
+  brotli_types text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
+}

@@ -1,12 +1,14 @@
 HTTP/2 200 
 server: nginx
-date: Sat, 31 Aug 2024 07:23:25 GMT
-content-type: application/pem-certificate-chain
-content-length: 2865
+date: Sun, 15 Sep 2024 14:37:45 GMT
+content-type: application/json
+content-length: 186
+boulder-requester: 1948122176
 cache-control: public, max-age=0, no-cache
 link: <https://acme-v02.api.letsencrypt.org/directory>;rel="index"
-link: <https://acme-v02.api.letsencrypt.org/acme/cert/036002d749cf3de3e3f006882398a6ee1b56/1>;rel="alternate"
-replay-nonce: LTxuIrHNJQ26FRRzc26nwpNkFVMGDNYdrBizlZdm6EFzHwXOIkM
+link: <https://acme-v02.api.letsencrypt.org/acme/authz-v3/403985176946>;rel="up"
+location: https://acme-v02.api.letsencrypt.org/acme/chall-v3/403985176946/e4T7wQ
+replay-nonce: 4OmWUlyUVQEjaP5yl-qRaGJtoUGFJGXqlzVDDcaNIcYFhqZcdyQ
 x-frame-options: DENY
 strict-transport-security: max-age=604800
 

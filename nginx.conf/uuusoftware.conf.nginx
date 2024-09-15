@@ -1,5 +1,3 @@
-resolver 8.8.8.8 8.8.4.4 ipv6=off;
-
 map $sent_http_content_type $expires {
   default                    max;
   # ~text/html                 30s;
@@ -11,28 +9,12 @@ map $sent_http_content_type $expires {
   # ~text/                     max;
 }
 
-map $http_cache_control $cache_bypass {
-  no-cache   1;
-}
-
-map $http_upgrade $connection_upgrade {
-  default upgrade;
-  ""      close;
-}
-
 map $subdomain  $headernoindexvalue {
   default  'noindex';
   master   '';
   www     '';
   ""    '';
 }
-
-charset utf-8;
-source_charset utf-8;
-
-absolute_redirect off;
-
-chunked_transfer_encoding off;
 
 server {
   listen 443 ssl;
