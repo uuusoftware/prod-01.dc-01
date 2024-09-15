@@ -52,7 +52,10 @@ server {
 
   set $subdomainfolder $subdomain;
   if ($subdomain = '') { set $subdomainfolder 'master'; }
-  if ($subdomain = 'www') { set $subdomainfolder 'master'; }
+  # if ($subdomain = 'www') { set $subdomainfolder 'master'; } // TODO Remove after 2024-10-01
+  if ($subdomain = 'www') {
+    rewrite ^/(.*)$ http://uuusoftware.com/$1 permanent;
+  }
 
   add_header X-Robots-Tag $headernoindexvalue always;
 
