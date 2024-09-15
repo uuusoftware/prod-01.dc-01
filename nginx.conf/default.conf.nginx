@@ -1,13 +1,3 @@
-resolver 8.8.8.8 8.8.4.4 ipv6=off;
-
-charset utf-8;
-source_charset utf-8;
-
-absolute_redirect off;
-
-chunked_transfer_encoding off;
-
-
   ##
   # Basic Settings
   ##
@@ -18,11 +8,32 @@ chunked_transfer_encoding off;
   # types_hash_max_size 2048;
   # default_type application/octet-stream;
 
+  resolver 8.8.8.8 8.8.4.4 ipv6=off;
+
+  charset utf-8;
+  source_charset utf-8;
+
+  absolute_redirect off;
+
+  chunked_transfer_encoding off;
+
+  server_tokens off; # removed nginx version from header
 
   server {
     listen 80 default_server;
     server_name _;
+    server_name_in_redirect off;
     return 302 https://$host$request_uri;
+  }
+
+  server {
+    listen 443 ssl http2 default_server;
+    server_name _;
+    ssl_certificate /etc/nginx/ssl/certificate/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/certificate/privkey.pem;
+    server_name_in_redirect off;
+    log_not_found off;
+    return 410;
   }
 
   ##

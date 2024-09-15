@@ -1,6 +1,6 @@
 server {
-  listen 443 ssl;
-  server_name  ~^(?<subdomain>[^\.]+)\.uuudesign\.com$;
+  listen 443 ssl http2;
+  server_name  uuudesign.com ~^(?<subdomain>[^\.]+)\.uuudesign\.com$;
 
   ssl_certificate /etc/nginx/ssl/certificate/fullchain.pem;
   ssl_certificate_key /etc/nginx/ssl/certificate/privkey.pem;
@@ -10,7 +10,7 @@ server {
 
   access_log off;
 
-  rewrite ^/(.*)$ https://uuusoftware.com/$1 permanent;
+  return 301 https://uuusoftware.com$request_uri;
 
   gzip on;
   # gzip_types text/html already included by default
