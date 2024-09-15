@@ -57,8 +57,13 @@ server {
   add_header X-Robots-Tag $headernoindexvalue always;
 
   location / {
-    root /www/uuusoftware.com/$subdomainfolder;
-    try_files $uri $uri/index.html $uri.html =404;
+    root /www/uuusoftware.com;
+    try_files
+        /$subdomainfolder$uri
+        /$subdomainfolder$uri/index.html
+        /$subdomainfolder$uri.html
+        /master$uri
+        =404;
   }
 
   location = /404-inlined.html {
@@ -67,8 +72,10 @@ server {
   }
 
   gzip on;
-  gzip_types text/html text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
+  # gzip_types text/html already included by default
+  gzip_types text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
 
   brotli on;
-  brotli_types text/html text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
+  # brotli_types text/html already included by default
+  brotli_types text/plain text/css text/javascript image/svg+xml image/x-icon application/javascript application/x-javascript application/json;
 }
