@@ -38,6 +38,9 @@ server {
   if ($subdomain = 'www') {
     rewrite ^/(.*)$ https://uuusoftware.com/$1 permanent;
   }
+  if ($subdomain = 'master') {
+    set $subdomainfolder '.unexisted-dummy-domain';
+  }
 
   add_header X-Robots-Tag $headernoindexvalue always;
 
