@@ -55,6 +55,7 @@ RUN CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') && \
     --add-module=/nginx_accept_language_module \
     --with-http_sub_module \
     --with-http_gzip_static_module \
+    --with-http_stub_status_module \
     && \
     make && make install
 
