@@ -43,7 +43,7 @@ jobs:
           # Only commit if there are changes
           if ! git diff --cached --quiet; then
             git commit -m "Auto-update files [skip ci]" --no-verify
-            git push
+            git push origin HEAD
           else
             echo "No changes to commit"
           fi
