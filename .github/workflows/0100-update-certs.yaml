@@ -7,6 +7,8 @@ on:
       - master
       - main
   workflow_dispatch:  # For manual run
+  schedule:
+    - cron: '0 0 * * 0'  # Every Sunday at 00:00 UTC
 
 jobs:
   run-and-commit:
@@ -39,3 +41,10 @@ jobs:
           fi
         # Prevent running again if commit is made by GitHub Actions
         if: github.actor != 'github-actions[bot]'
+
+      - name: Create random file
+        run: |
+          RANDOM_FILE="random-$(date +%s)-$RANDOM.txt"
+          echo "This is a random file created at $(date)" > "$RANDOM_FILE"
+          echo "Created file: $RANDOM_FILE"
+
