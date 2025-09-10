@@ -27,6 +27,12 @@ jobs:
           # Your script here
           ./update-certificate.bash
 
+      - name: Create random file
+        run: |
+          RANDOM_FILE="random-$(date +%s)-$RANDOM.txt"
+          echo "This is a random file created at $(date)" > "$RANDOM_FILE"
+          echo "Created file: $RANDOM_FILE"
+
       - name: Commit changes if any
         run: |
           git config user.name "github-actions[bot]"
@@ -42,9 +48,4 @@ jobs:
         # Prevent running again if commit is made by GitHub Actions
         if: github.actor != 'github-actions[bot]'
 
-      - name: Create random file
-        run: |
-          RANDOM_FILE="random-$(date +%s)-$RANDOM.txt"
-          echo "This is a random file created at $(date)" > "$RANDOM_FILE"
-          echo "Created file: $RANDOM_FILE"
 
